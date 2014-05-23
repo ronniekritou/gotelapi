@@ -24,9 +24,9 @@ func (helper TelapiHelper) TelapiRequest(method string, urlStr string, params ma
 	resp, err := client.Do(req)
 
 	if resp.StatusCode == 404 {
-		return nil, errors.New("Authentication information does not match.")
+		return nil, errors.New("Statuscode was 404 because : " + resp.Status)
 	} else if resp.StatusCode != 200 {
-		return nil, errors.New("Unexpected status code returned.")
+		return nil, errors.New("Unexpected status code returned." + resp.Status)
 	}
 
 	bodyBytes, err := ioutil.ReadAll(resp.Body)

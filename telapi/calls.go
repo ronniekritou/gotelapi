@@ -4,7 +4,7 @@ import (
 	"errors"
 )
 
-func (helper TelapiHelper) GetCallData(call_sid string) (map[string]interface{}, error) {
+func (helper TelapiHelper) ViewCall(call_sid string) (map[string]interface{}, error) {
 	if call_sid == "" {
 		return nil, errors.New("Missing required call sid.")
 	}

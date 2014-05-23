@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestGetCallData(t *testing.T) {
+func TestViewCall(t *testing.T) {
 
 	var (
 		err           error
@@ -22,14 +22,14 @@ func TestGetCallData(t *testing.T) {
 		})
 
 		Convey("Should blow up because no voicemail sid", func() {
-			resp, err := telapi_helper.GetCallData("")
+			resp, err := telapi_helper.ViewCall("")
 
 			So(err, ShouldNotEqual, nil)
 			So(resp, ShouldEqual, nil)
 		})
 
 		Convey("Should have no errors", func() {
-			resp, err = telapi_helper.GetCallData("CA6c88908491f4a2a7b2cd41478a408584")
+			resp, err = telapi_helper.ViewCall("CA6c88908491f4a2a7b2cd41478a408584")
 			So(err, ShouldEqual, nil)
 			So(resp["call_status"], ShouldNotEqual, "")
 		})
