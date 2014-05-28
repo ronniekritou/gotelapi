@@ -5,13 +5,6 @@ import (
 	"testing"
 )
 
-var (
-	testing_telapi_sid        = "AC1d530461c32a4840a1a19183d0a0bb8c"
-	testing_telapi_auth_token = "335cfd52bd534c18b55801f4cb2f76fa"
-	testing_number_to         = "+17325807596"
-	testing_number_from       = "+17327305402" //Correlates to telapi sid being used
-)
-
 func TestCreateClient(t *testing.T) {
 
 	Convey("Tests when creating a client", t, func() {
