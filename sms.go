@@ -11,9 +11,10 @@ func (helper TelapiHelper) SendSMS(to string, from string, body string) error {
 	}
 
 	data := map[string]string{
-		"To":   to,
-		"From": from,
-		"Body": body,
+		"To":            to,
+		"From":          from,
+		"Body":          body,
+		"AllowMultiple": true,
 	}
 
 	if _, err := helper.PostRequest("/SMS/Messages", data); err != nil {
