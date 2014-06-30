@@ -30,7 +30,7 @@ func (helper TelapiHelper) TranscribeAudioUrl(audio_url string, callback_url str
 
 	data := map[string]string{
 		"AudioUrl":           audio_url,
-		"Quality":            "auto",
+		"Quality":            "gold",
 		"TranscribeCallback": callback_url,
 	}
 
