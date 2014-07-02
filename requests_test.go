@@ -17,7 +17,7 @@ func TestPostRequest(t *testing.T) {
 		Convey("Should not have an error, bc correct credentials", func() {
 			telapi_helper, err = CreateClient(testing_telapi_sid, testing_telapi_auth_token)
 
-			So(err, ShouldEqual, nil)
+			So(err, ShouldBeNil)
 		})
 
 		data := map[string]string{
@@ -29,13 +29,13 @@ func TestPostRequest(t *testing.T) {
 		Convey("Should blow up due to bad endpoint", func() {
 			_, err = telapi_helper.PostRequest("/SMS/Messges", data)
 
-			So(err, ShouldNotEqual, nil)
+			So(err, ShouldNotBeNil)
 		})
 
 		_, err = telapi_helper.PostRequest("/SMS/Messages", data)
 
 		Convey("Should have no errors", func() {
-			So(err, ShouldEqual, nil)
+			So(err, ShouldBeNil)
 		})
 
 	})
@@ -54,7 +54,7 @@ func TestGetRequest(t *testing.T) {
 		Convey("Should not have an error, bc correct credentials", func() {
 			telapi_helper, err = CreateClient(testing_telapi_sid, testing_telapi_auth_token)
 
-			So(err, ShouldEqual, nil)
+			So(err, ShouldBeNil)
 		})
 
 		data := map[string]string{}
@@ -62,13 +62,13 @@ func TestGetRequest(t *testing.T) {
 		Convey("Should blow up due to bad endpoint", func() {
 			_, err = telapi_helper.GetRequest("Transcriptns", data)
 
-			So(err, ShouldNotEqual, nil)
+			So(err, ShouldNotBeNil)
 		})
 
 		Convey("Should have no errors", func() {
 			_, err = telapi_helper.GetRequest("/Transcriptions", data)
 
-			So(err, ShouldEqual, nil)
+			So(err, ShouldBeNil)
 		})
 
 	})

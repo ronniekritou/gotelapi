@@ -10,7 +10,7 @@ func TestCarrierLookup(t *testing.T) {
 	var (
 		err           error
 		telapi_helper TelapiHelper
-		resp          string
+		carrier       *CarrierLookup
 	)
 
 	Convey("Tests when CarrierLookup method called ", t, func() {
@@ -18,22 +18,21 @@ func TestCarrierLookup(t *testing.T) {
 		Convey("Should not have an error, bc correct credentials", func() {
 			telapi_helper, err = CreateClient(testing_telapi_sid, testing_telapi_auth_token)
 
-			So(err, ShouldEqual, nil)
+			So(err, ShouldBeNil)
 		})
 
 		Convey("Should blow up because no phone number", func() {
-			resp, err = telapi_helper.CarrierLookup("")
+			carrier, err = telapi_helper.CarrierLookup("")
 
-			So(err, ShouldNotEqual, nil)
-			So(resp, ShouldEqual, "")
+			So(err, ShouldNotBeNil)
+			So(carrier, ShouldBeNil)
 		})
 
 		Convey("Should have no errors", func() {
-			resp, err = telapi_helper.CarrierLookup("+13134333244")
+			carrier, err = telapi_helper.CarrierLookup("+13134333244")
 
-			So(err, ShouldEqual, nil)
-
-			So(resp, ShouldContainSubstring, "Sprint")
+			So(err, ShouldBeNil)
+			So(carrier, ShouldNotBeNil)
 		})
 
 	})
@@ -44,7 +43,7 @@ func TestBNALookup(t *testing.T) {
 	var (
 		err           error
 		telapi_helper TelapiHelper
-		resp          map[string]interface{}
+		resp          *BnaLookup
 	)
 
 	Convey("Tests when BnaLookup method called ", t, func() {
@@ -52,21 +51,21 @@ func TestBNALookup(t *testing.T) {
 		Convey("Should not have an error, bc correct credentials", func() {
 			telapi_helper, err = CreateClient(testing_telapi_sid, testing_telapi_auth_token)
 
-			So(err, ShouldEqual, nil)
+			So(err, ShouldBeNil)
 		})
 
 		Convey("Should blow up because no phone number", func() {
 			resp, err = telapi_helper.BnaLookup("")
 
-			So(err, ShouldNotEqual, nil)
-			So(resp, ShouldEqual, nil)
+			So(err, ShouldNotBeNil)
+			So(resp, ShouldBeNil)
 		})
 
 		Convey("Should have no errors", func() {
 			resp, err = telapi_helper.BnaLookup("+13134333244")
 
-			So(err, ShouldEqual, nil)
-			So(resp["phone_number"], ShouldNotEqual, "")
+			So(err, ShouldBeNil)
+			So(resp, ShouldNotBeNil)
 		})
 
 	})
@@ -77,7 +76,7 @@ func TestCnamLookup(t *testing.T) {
 	var (
 		err           error
 		telapi_helper TelapiHelper
-		resp          map[string]interface{}
+		resp          *CnamLookup
 	)
 
 	Convey("Tests when BnaLookup method called ", t, func() {
@@ -85,21 +84,21 @@ func TestCnamLookup(t *testing.T) {
 		Convey("Should not have an error, bc correct credentials", func() {
 			telapi_helper, err = CreateClient(testing_telapi_sid, testing_telapi_auth_token)
 
-			So(err, ShouldEqual, nil)
+			So(err, ShouldBeNil)
 		})
 
 		Convey("Should blow up because no phone number", func() {
 			resp, err = telapi_helper.CnamLookup("")
 
-			So(err, ShouldNotEqual, nil)
-			So(resp, ShouldEqual, nil)
+			So(err, ShouldNotBeNil)
+			So(resp, ShouldBeNil)
 		})
 
 		Convey("Should have no errors", func() {
 			resp, err = telapi_helper.CnamLookup("+13134333244")
 
-			So(err, ShouldEqual, nil)
-			So(resp["body"], ShouldNotEqual, "")
+			So(err, ShouldBeNil)
+			So(resp, ShouldNotBeNil)
 		})
 
 	})

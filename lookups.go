@@ -1,36 +1,58 @@
 package telapi
 
 import (
+	"encoding/json"
 	"errors"
-	"strings"
 )
 
-func (helper TelapiHelper) CarrierLookup(phone_number string) (string, error) {
-	if phone_number == "" {
-		return "", errors.New("Missing required voicemail sid.")
-	}
-
-	data := map[string]string{
-		"PhoneNumber": phone_number,
-	}
-
-	response, err := helper.PostRequest("/Lookups/Carrier", data)
-
-	if err != nil {
-		return "", err
-	}
-
-	response_list := response["carrier_lookups"]
-	carrierList := response_list.([]interface{})
-	carrierData := carrierList[0].(map[string]interface{})
-
-	carrier := carrierData["network"].(string)
-
-	return strings.Split(carrier, " ")[0], nil
-
+type CarrierLookup struct {
+	Sid         string
+	DataCreated string
+	DateUpdated string
+	AccountSid  string
+	PhoneNumber string
+	Network     string
+	Mobile      bool `json:",string"`
+	CarrierId   float64
+	CountryCode string
+	Mnc         string
+	Mcc         string
+	Price       string
+	ApiVersion  string
+	Uri         string
 }
 
-func (helper TelapiHelper) BnaLookup(phone_number string) (map[string]interface{}, error) {
+type CnamLookup struct {
+	Sid         string
+	DataCreated string
+	DateUpdated string
+	AccountSid  string
+	PhoneNumber string
+	Body        string
+	Price       string
+	ApiVersion  string
+	Uri         string
+}
+
+type BnaLookup struct {
+	Sid         string
+	DataCreated string
+	DateUpdated string
+	AccountSid  string
+	PhoneNumber string
+	FirstName   string
+	LastName    string
+	Address     string
+	City        string
+	State       string
+	ZipCode     string
+	CountryCode string
+	Price       string
+	ApiVersion  string
+	Uri         string
+}
+
+func (helper TelapiHelper) CarrierLookup(phone_number string) (*CarrierLookup, error) {
 	if phone_number == "" {
 		return nil, errors.New("Missing required voicemail sid.")
 	}
@@ -39,41 +61,40 @@ func (helper TelapiHelper) BnaLookup(phone_number string) (map[string]interface{
 		"PhoneNumber": phone_number,
 	}
 
-	response, err := helper.PostRequest("/Lookups/Bna", data)
+	resp, err := helper.PostRequest("/Lookups/Carrier", data)
 
 	if err != nil {
 		return nil, err
 	}
 
-	response_list := response["bna_lookups"]
-	bna_list := response_list.([]interface{})
-	bna_data := bna_list[0].(map[string]interface{})
+	//Lets unmarshal our response
+	var f interface{}
+	err = json.Unmarshal(*resp, &f)
+	if err != nil {
+		return nil, err
+	}
 
-	// carrier := bnaData["network"].(string)
+	//Since it returns us a map with an array as the first element, we have to parse it out
+	data_map := f.(map[string]interface{})
+	response_list := data_map["carrier_lookups"]
+	carrierList := response_list.([]interface{}) //array of interfaces
+	carrier_data, err := json.Marshal(carrierList[0].(map[string]interface{}))
+	// make it back into bytes so we can apply attributes
 
-	return bna_data, nil
+	if err != nil {
+		return nil, err
+	}
+
+	carrier := new(CarrierLookup)
+
+	if err = json.Unmarshal(carrier_data, &carrier); err != nil {
+		return nil, err
+	}
+	return carrier, nil
 
 }
 
-/*
-BNA RETURNS AS
-
-map[
-	date_created:Thu, 22 May 2014 16:14:01 -0000
-	price:0.00
-	api_version:v2
-	city:DETROIT
-	state:MI
-	phone_number:+4698694768
-	sid:BL6c8890844ce10910008c4bf49ffd9420
-	date_updated:Thu, 22 May 2014 16:14:02 -0000
-	uri:/v2/Accounts/AC1d530461c32a4840a1a19183d0a0bb8c/BNA/BL6c8890844ce10910008c4bf49ffd9420
-	account_sid:AC1d530461c32a4840a1a19183d0a0bb8c
-	country_code:US]
-
-*/
-
-func (helper TelapiHelper) CnamLookup(phone_number string) (map[string]interface{}, error) {
+func (helper TelapiHelper) BnaLookup(phone_number string) (*BnaLookup, error) {
 	if phone_number == "" {
 		return nil, errors.New("Missing required voicemail sid.")
 	}
@@ -82,18 +103,68 @@ func (helper TelapiHelper) CnamLookup(phone_number string) (map[string]interface
 		"PhoneNumber": phone_number,
 	}
 
-	response, err := helper.PostRequest("/Lookups/Cnam", data)
+	resp, err := helper.PostRequest("/Lookups/Bna", data)
 
 	if err != nil {
 		return nil, err
 	}
 
-	response_list := response["cnam_lookups"]
-	cnam_list := response_list.([]interface{})
-	cnam_data := cnam_list[0].(map[string]interface{})
+	//Lets unmarshal our response
+	var f interface{}
+	err = json.Unmarshal(*resp, &f)
+	if err != nil {
+		return nil, err
+	}
 
-	// carrier := bnaData["network"].(string)
+	//Since it returns us a map with an array as the first element, we have to parse it out
+	data_map := f.(map[string]interface{})
+	response_list := data_map["bna_lookups"]
+	bnaList := response_list.([]interface{}) //array of interfaces
+	bna_data, err := json.Marshal(bnaList[0].(map[string]interface{}))
+	// make it back into bytes so we can apply attributes
 
-	return cnam_data, nil
+	bna := new(BnaLookup)
+
+	if err = json.Unmarshal(bna_data, &bna); err != nil {
+		return nil, err
+	}
+	return bna, nil
+}
+
+func (helper TelapiHelper) CnamLookup(phone_number string) (*CnamLookup, error) {
+	if phone_number == "" {
+		return nil, errors.New("Missing required voicemail sid.")
+	}
+
+	data := map[string]string{
+		"PhoneNumber": phone_number,
+	}
+
+	resp, err := helper.PostRequest("/Lookups/Cnam", data)
+
+	if err != nil {
+		return nil, err
+	}
+
+	//Lets unmarshal our response
+	var f interface{}
+	err = json.Unmarshal(*resp, &f)
+	if err != nil {
+		return nil, err
+	}
+
+	//Since it returns us a map with an array as the first element, we have to parse it out
+	data_map := f.(map[string]interface{})
+	response_list := data_map["cnam_lookups"]
+	cnamList := response_list.([]interface{}) //array of interfaces
+	cnam_data, err := json.Marshal(cnamList[0].(map[string]interface{}))
+	// make it back into bytes so we can apply attributes
+
+	cnam := new(CnamLookup)
+
+	if err = json.Unmarshal(cnam_data, &cnam); err != nil {
+		return nil, err
+	}
+	return cnam, nil
 
 }

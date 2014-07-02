@@ -5,8 +5,8 @@ import (
 )
 
 type TelapiHelper struct {
-	sid        string
-	auth_token string
+	Sid       string
+	AuthToken string
 }
 
 func CreateClient(sid string, auth_token string) (TelapiHelper, error) {

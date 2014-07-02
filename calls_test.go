@@ -1,8 +1,16 @@
 package telapi
 
 import (
+	"fmt"
 	. "github.com/smartystreets/goconvey/convey"
 	"testing"
+)
+
+var (
+	testing_telapi_sid        = "telapi_sid"
+	testing_telapi_auth_token = "your_telapi_auth_token"
+	testing_number_to         = "your_telapi_number"
+	testing_number_from       = "other_testing_number" //Correlates to telapi sid being used
 )
 
 func TestViewCall(t *testing.T) {
@@ -10,28 +18,33 @@ func TestViewCall(t *testing.T) {
 	var (
 		err           error
 		telapi_helper TelapiHelper
-		resp          map[string]interface{}
+		call          *Call
 	)
 
+	fmt.Println("Convey 1 Before")
 	Convey("Tests when GetCallData method has been called", t, func() {
 
 		Convey("Should not have an error, bc correct credentials", func() {
+			fmt.Println("Convey 2 after")
+
 			telapi_helper, err = CreateClient(testing_telapi_sid, testing_telapi_auth_token)
 
-			So(err, ShouldEqual, nil)
+			So(err, ShouldBeNil)
 		})
 
 		Convey("Should blow up because no voicemail sid", func() {
-			resp, err := telapi_helper.ViewCall("")
+			fmt.Println("Convey 3 after")
 
-			So(err, ShouldNotEqual, nil)
-			So(resp, ShouldEqual, nil)
+			call, err = telapi_helper.ViewCall("")
+
+			So(err, ShouldNotBeNil)
+			So(call, ShouldBeNil)
 		})
 
 		Convey("Should have no errors", func() {
-			resp, err = telapi_helper.ViewCall("CA6c88908491f4a2a7b2cd41478a408584")
-			So(err, ShouldEqual, nil)
-			So(resp["call_status"], ShouldNotEqual, "")
+			call, err = telapi_helper.ViewCall("CA6c88908491f4a2a7b2cd41478a408584")
+			So(err, ShouldBeNil)
+			So(call, ShouldNotBeNil)
 		})
 
 	})

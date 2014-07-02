@@ -13,10 +13,10 @@ func TestCreateClient(t *testing.T) {
 			telapi_helper, err := CreateClient("", "")
 
 			Convey("Should bubble an error due to empty strings", func() {
-				So(err, ShouldNotEqual, nil)
+				So(err, ShouldNotBeNil)
 			})
 			Convey("Since empty strings, should return a bad helper", func() {
-				So(telapi_helper.sid, ShouldEqual, "")
+				So(telapi_helper.Sid, ShouldEqual, "")
 			})
 		})
 
@@ -24,10 +24,10 @@ func TestCreateClient(t *testing.T) {
 			telapi_helper, err := CreateClient("test1", "test1")
 
 			Convey("Should bubble an error due to invalid credentials on telapi end", func() {
-				So(err, ShouldNotEqual, nil)
+				So(err, ShouldNotBeNil)
 			})
 			Convey("Since error bubbled should return a bad helper", func() {
-				So(telapi_helper.sid, ShouldEqual, "")
+				So(telapi_helper.Sid, ShouldEqual, "")
 			})
 		})
 
@@ -35,10 +35,10 @@ func TestCreateClient(t *testing.T) {
 			telapi_helper, err := CreateClient(testing_telapi_sid, testing_telapi_auth_token)
 
 			Convey("Should be no error, due to good credentials", func() {
-				So(err, ShouldEqual, nil)
+				So(err, ShouldBeNil)
 			})
 			Convey("The sid should be correctly set.", func() {
-				So(telapi_helper.sid, ShouldEqual, testing_telapi_sid)
+				So(telapi_helper.Sid, ShouldEqual, testing_telapi_sid)
 			})
 		})
 

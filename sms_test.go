@@ -17,31 +17,42 @@ func TestSendSMS(t *testing.T) {
 		Convey("Should not have an error, bc correct credentials", func() {
 			telapi_helper, err = CreateClient(testing_telapi_sid, testing_telapi_auth_token)
 
-			So(err, ShouldEqual, nil)
+			So(err, ShouldBeNil)
 		})
 
 		Convey("Should blow up to no 'To' ", func() {
 			err = telapi_helper.SendSMS("", "hey", "")
 
-			So(err, ShouldNotEqual, nil)
+			So(err, ShouldNotBeNil)
 		})
 
 		Convey("Should blow up to no 'From' ", func() {
 			err = telapi_helper.SendSMS("+", "", "")
 
-			So(err, ShouldNotEqual, nil)
+			So(err, ShouldNotBeNil)
 		})
 
 		Convey("Should blow up to no 'Body' ", func() {
 			err = telapi_helper.SendSMS("372", "hey", "")
 
-			So(err, ShouldNotEqual, nil)
+			So(err, ShouldNotBeNil)
 		})
 
 		Convey("Should have no errors", func() {
-			err = telapi_helper.SendSMS(testing_number_to, testing_number_from, "Testing SendSMS")
+			err = telapi_helper.SendSMS(testing_number_to, testing_number_from, `TrapCall New Transcription
+Cell Phone   NJ
+(848) 210-6084
+NEW JERSEY NJ 
+(06/30/14 4:05 PM)
+I make phone calls because Ronnie talk to you soon.
+http://v.trapcall.com/445jccko
 
-			So(err, ShouldEqual, nil)
+fklnfdlkdnldskdfd
+
+fdkldsnskln
+`)
+
+			So(err, ShouldBeNil)
 		})
 
 	})

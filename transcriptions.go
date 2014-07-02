@@ -1,10 +1,30 @@
 package telapi
 
 import (
+	"encoding/json"
 	"errors"
 )
 
-func (helper TelapiHelper) TranscribeRecording(vm_sid string, callback_url string) (map[string]interface{}, error) {
+type Transcription struct {
+	Sid                   string
+	DataCreated           string
+	DateUpdated           string
+	ParentCallSid         string
+	AccountSid            string
+	Status                string
+	Type                  string
+	AudioUrl              string
+	RecordingSid          string //Maybe should be float value is like 0.01000
+	Duration              float64
+	TranscriptionText     string
+	ApiVersion            string
+	Price                 string
+	TranscriptionCallback string
+	CallbackMethod        string
+	Uri                   string
+}
+
+func (helper TelapiHelper) TranscribeRecording(vm_sid string, callback_url string) (*Transcription, error) {
 	if vm_sid == "" {
 		return nil, errors.New("Missing required voicemail sid.")
 	}
@@ -19,18 +39,23 @@ func (helper TelapiHelper) TranscribeRecording(vm_sid string, callback_url strin
 		return nil, err
 	}
 
-	return response, nil
+	transcription := new(Transcription)
+
+	if err = json.Unmarshal(*response, &transcription); err != nil {
+		return nil, err
+	}
+	return transcription, nil
 
 }
 
-func (helper TelapiHelper) TranscribeAudioUrl(audio_url string, callback_url string) (map[string]interface{}, error) {
+func (helper TelapiHelper) TranscribeAudioUrl(audio_url string, callback_url string) (*Transcription, error) {
 	if audio_url == "" {
 		return nil, errors.New("Missing required audio url.")
 	}
 
 	data := map[string]string{
 		"AudioUrl":           audio_url,
-		"Quality":            "gold",
+		"Quality":            "auto",
 		"TranscribeCallback": callback_url,
 	}
 
@@ -40,11 +65,16 @@ func (helper TelapiHelper) TranscribeAudioUrl(audio_url string, callback_url str
 		return nil, err
 	}
 
-	return response, nil
+	transcription := new(Transcription)
+
+	if err = json.Unmarshal(*response, &transcription); err != nil {
+		return nil, err
+	}
+	return transcription, nil
 
 }
 
-func (helper TelapiHelper) ViewTranscription(tr_sid string) (map[string]interface{}, error) {
+func (helper TelapiHelper) ViewTranscription(tr_sid string) (*Transcription, error) {
 	if tr_sid == "" {
 		return nil, errors.New("Missing required transcription sid.")
 	}
@@ -56,6 +86,11 @@ func (helper TelapiHelper) ViewTranscription(tr_sid string) (map[string]interfac
 
 	}
 
-	return response, nil
+	transcription := new(Transcription)
+
+	if err = json.Unmarshal(*response, &transcription); err != nil {
+		return nil, err
+	}
+	return transcription, nil
 
 }

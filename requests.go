@@ -2,7 +2,6 @@ package telapi
 
 import (
 	"bytes"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"io/ioutil"
@@ -10,7 +9,7 @@ import (
 	// "net/url"
 )
 
-func (helper TelapiHelper) TelapiRequest(method string, urlStr string, params map[string]string) (map[string]interface{}, error) {
+func (helper TelapiHelper) TelapiRequest(method string, urlStr string, params map[string]string) (*[]byte, error) {
 
 	data := DataMapToUrlValues(params)
 
@@ -20,8 +19,9 @@ func (helper TelapiHelper) TelapiRequest(method string, urlStr string, params ma
 		return nil, err
 	}
 
-	req.SetBasicAuth(helper.sid, helper.auth_token)
+	req.SetBasicAuth(helper.Sid, helper.AuthToken)
 	resp, err := client.Do(req)
+	defer resp.Body.Close()
 
 	if resp.StatusCode == 404 {
 		return nil, errors.New("Statuscode was 404 because : " + resp.Status)
@@ -31,26 +31,13 @@ func (helper TelapiHelper) TelapiRequest(method string, urlStr string, params ma
 
 	bodyBytes, err := ioutil.ReadAll(resp.Body)
 
-	if err != nil {
-		return nil, err
-	}
-
-	var f interface{}
-
-	err = json.Unmarshal(bodyBytes, &f)
-	if err != nil {
-		return nil, err
-	}
-
-	m := f.(map[string]interface{})
-
-	return m, nil
+	return &bodyBytes, nil
 
 }
 
-func (helper TelapiHelper) PostRequest(uri string, param_data map[string]string) (map[string]interface{}, error) {
+func (helper TelapiHelper) PostRequest(uri string, param_data map[string]string) (*[]byte, error) {
 
-	urlStr := fmt.Sprintf("https://api.telapi.com/v1/Accounts/%s%s.json", helper.sid, uri)
+	urlStr := fmt.Sprintf("https://api.telapi.com/v1/Accounts/%s%s.json", helper.Sid, uri)
 
 	resp, err := helper.TelapiRequest("POST", urlStr, param_data)
 	if err != nil {
@@ -60,9 +47,9 @@ func (helper TelapiHelper) PostRequest(uri string, param_data map[string]string)
 	return resp, nil
 }
 
-func (helper TelapiHelper) GetRequest(uri string, param_data map[string]string) (map[string]interface{}, error) {
+func (helper TelapiHelper) GetRequest(uri string, param_data map[string]string) (*[]byte, error) {
 
-	urlStr := fmt.Sprintf("https://api.telapi.com/v1/Accounts/%s%s.json", helper.sid, uri)
+	urlStr := fmt.Sprintf("https://api.telapi.com/v1/Accounts/%s%s.json", helper.Sid, uri)
 
 	resp, err := helper.TelapiRequest("GET", urlStr, param_data)
 	if err != nil {
