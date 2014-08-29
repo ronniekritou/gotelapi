@@ -22,14 +22,14 @@ func TestTranscribeRecording(t *testing.T) {
 		})
 
 		Convey("Should blow up because no voicemail sid", func() {
-			resp, err := telapi_helper.TranscribeRecording("", "")
+			resp, err := telapi_helper.TranscribeRecording("", "", "")
 
 			So(err, ShouldNotBeNil)
 			So(resp, ShouldBeNil)
 		})
 
 		Convey("Should have no errors", func() {
-			resp, err = telapi_helper.TranscribeRecording("RE4c88908451eaa184b4514b528142505c", "")
+			resp, err = telapi_helper.TranscribeRecording("RE4c88908451eaa184b4514b528142505c", "", "")
 
 			So(err, ShouldBeNil)
 			So(resp.TranscriptionText, ShouldNotBeNil)
@@ -55,14 +55,14 @@ func TestTranscribeAudioUrl(t *testing.T) {
 		})
 
 		Convey("Should blow up because no url", func() {
-			resp, err := telapi_helper.TranscribeAudioUrl("", "")
+			resp, err := telapi_helper.TranscribeAudioUrl("", "", "")
 
 			So(err, ShouldNotBeNil)
 			So(resp, ShouldBeNil)
 		})
 
 		Convey("Should have no errors", func() {
-			resp, err = telapi_helper.TranscribeAudioUrl("http://recordings.telapi.com/RB47f8c862ab4a478095e5c07252d99f84/REbb8890842aaee99deed04aef836a0679.mp3", "")
+			resp, err = telapi_helper.TranscribeAudioUrl("http://recordings.telapi.com/RB47f8c862ab4a478095e5c07252d99f84/REbb8890842aaee99deed04aef836a0679.mp3", "", "")
 
 			So(err, ShouldBeNil)
 			So(resp.TranscriptionText, ShouldNotBeNil)

@@ -24,13 +24,18 @@ type Transcription struct {
 	Uri                   string
 }
 
-func (helper TelapiHelper) TranscribeRecording(vm_sid string, callback_url string) (*Transcription, error) {
+func (helper TelapiHelper) TranscribeRecording(vm_sid string, callback_url string, quality string) (*Transcription, error) {
 	if vm_sid == "" {
 		return nil, errors.New("Missing required voicemail sid.")
 	}
 
 	data := map[string]string{
 		"TranscribeCallback": callback_url,
+	}
+	if quality == "" {
+		data["Quality"] = "auto"
+	} else {
+		data["Quality"] = quality
 	}
 
 	response, err := helper.PostRequest("/Recordings/"+vm_sid+"/Transcriptions", data)
@@ -48,15 +53,20 @@ func (helper TelapiHelper) TranscribeRecording(vm_sid string, callback_url strin
 
 }
 
-func (helper TelapiHelper) TranscribeAudioUrl(audio_url string, callback_url string) (*Transcription, error) {
+func (helper TelapiHelper) TranscribeAudioUrl(audio_url string, callback_url string, quality string) (*Transcription, error) {
 	if audio_url == "" {
 		return nil, errors.New("Missing required audio url.")
 	}
 
 	data := map[string]string{
 		"AudioUrl":           audio_url,
-		"Quality":            "auto",
 		"TranscribeCallback": callback_url,
+	}
+
+	if quality == "" {
+		data["Quality"] = "auto"
+	} else {
+		data["Quality"] = quality
 	}
 
 	response, err := helper.PostRequest("/Transcriptions", data)
