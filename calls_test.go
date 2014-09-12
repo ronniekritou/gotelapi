@@ -50,6 +50,41 @@ func TestViewCall(t *testing.T) {
 	})
 }
 
+func TestRecordCall(t *testing.T) {
+
+	var (
+		err           error
+		telapi_helper TelapiHelper
+	)
+
+	Convey("Tests when Record is called in an inprogress call", t, func() {
+
+		Convey("Should not have an error, bc correct credentials", func() {
+
+			telapi_helper, err = CreateClient(testing_telapi_sid, testing_telapi_auth_token)
+
+			So(err, ShouldBeNil)
+		})
+
+		Convey("Should blow up because no call sid", func() {
+
+			err = telapi_helper.RecordCall("", map[string]string{})
+
+			So(err, ShouldNotBeNil)
+		})
+
+		Convey("Should have no errors", func() {
+			data := map[string]string{
+				"Direction":   "in",
+				"CallBackUrl": "http://webhookr.com/349mXC",
+			}
+			err = telapi_helper.RecordCall("CA4d8890840244259058c44052866b64f8", data)
+			So(err, ShouldBeNil)
+		})
+
+	})
+}
+
 /*
 
 CALL INFORMATION MAP PRINTED OUT

@@ -45,3 +45,19 @@ func (helper TelapiHelper) ViewCall(call_sid string) (*Call, error) {
 	return call, nil
 
 }
+
+func (helper TelapiHelper) RecordCall(call_sid string, params map[string]string) error {
+	if call_sid == "" {
+		return errors.New("Missing required call sid.")
+	}
+
+	params["Record"] = "true"
+
+	_, err := helper.PostRequest("/Calls/"+call_sid+"/Recordings", params)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
