@@ -21,25 +21,25 @@ func TestSendSMS(t *testing.T) {
 		})
 
 		Convey("Should blow up to no 'To' ", func() {
-			err = telapi_helper.SendSMS("", "hey", "")
+			_, err = telapi_helper.SendSMS("", "hey", "")
 
 			So(err, ShouldNotBeNil)
 		})
 
 		Convey("Should blow up to no 'From' ", func() {
-			err = telapi_helper.SendSMS("+", "", "")
+			_, err = telapi_helper.SendSMS("+", "", "")
 
 			So(err, ShouldNotBeNil)
 		})
 
 		Convey("Should blow up to no 'Body' ", func() {
-			err = telapi_helper.SendSMS("372", "hey", "")
+			_, err = telapi_helper.SendSMS("372", "hey", "")
 
 			So(err, ShouldNotBeNil)
 		})
 
 		Convey("Should have no errors", func() {
-			err = telapi_helper.SendSMS(testing_number_to, testing_number_from, `TrapCall New Transcription
+			sms, err := telapi_helper.SendSMS(testing_number_to, testing_number_from, `TrapCall New Transcription
 Cell Phone   NJ
 (848) 210-6084
 NEW JERSEY NJ 
@@ -53,6 +53,13 @@ fdkldsnskln
 `)
 
 			So(err, ShouldBeNil)
+			So(sms, ShouldNotBeNil)
+
+			So(sms.Sid, ShouldNotEqual, "")
+			So(sms.Body, ShouldNotEqual, "")
+			So(sms.To, ShouldNotEqual, "")
+			So(sms.From, ShouldNotEqual, "")
+
 		})
 
 	})
