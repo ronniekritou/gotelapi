@@ -18,24 +18,39 @@ func TestPostRequest(t *testing.T) {
 			telapi_helper, err = CreateClient(testing_telapi_sid, testing_telapi_auth_token)
 
 			So(err, ShouldBeNil)
+			So(telapi_helper, ShouldNotBeNil)
 		})
 
-		data := map[string]string{
-			"To":   testing_number_to,
-			"From": testing_number_from,
-			"Body": "This is a test",
-		}
-
 		Convey("Should blow up due to bad endpoint", func() {
-			_, err = telapi_helper.PostRequest("/SMS/Messges", data)
-
+			_, err = telapi_helper.PostRequest("/SMS/Messges", nil)
 			So(err, ShouldNotBeNil)
 		})
 
-		_, err = telapi_helper.PostRequest("/SMS/Messages", data)
-
 		Convey("Should have no errors", func() {
+			telapi_helper, err = CreateClient(testing_telapi_sid, testing_telapi_auth_token)
 			So(err, ShouldBeNil)
+			So(telapi_helper, ShouldNotBeNil)
+
+			sms, err := telapi_helper.SendSMS(testing_number_to, testing_number_from, `TrapCall New Transcription
+Cell Phone   NJ
+(848) 210-6084
+NEW JERSEY NJ 
+(06/30/14 4:05 PM)
+I make phone calls because Ronnie talk to you soon.
+http://v.trapcall.com/445jccko
+
+fklnfdlkdnldskdfd
+
+fdkldsnskln
+`)
+
+			So(err, ShouldBeNil)
+			So(sms, ShouldNotBeNil)
+
+			So(sms.Sid, ShouldNotEqual, "")
+			So(sms.Body, ShouldNotEqual, "")
+			So(sms.To, ShouldNotEqual, "")
+			So(sms.From, ShouldNotEqual, "")
 		})
 
 	})

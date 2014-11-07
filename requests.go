@@ -13,23 +13,34 @@ func (helper TelapiHelper) TelapiRequest(method string, urlStr string, params ma
 
 	data := DataMapToUrlValues(params)
 
-	client := &http.Client{}
-	req, err := http.NewRequest(method, urlStr, bytes.NewBufferString(data.Encode()))
-	if err != nil {
-		return nil, err
-	}
+	var resp *http.Response
 
-	req.SetBasicAuth(helper.Sid, helper.AuthToken)
-	resp, err := client.Do(req)
-	defer resp.Body.Close()
+	for i := 0; i < 2; i++ {
+		client := &http.Client{}
+		req, err := http.NewRequest(method, urlStr, bytes.NewBufferString(data.Encode()))
+		if err != nil {
+			return nil, err
+		}
 
-	if resp.StatusCode == 404 {
-		return nil, errors.New("Statuscode was 404 because : " + resp.Status)
-	} else if resp.StatusCode != 200 {
-		return nil, errors.New("Unexpected status code returned." + resp.Status)
+		req.SetBasicAuth(helper.Sid, helper.AuthToken)
+		resp, err = client.Do(req)
+		defer resp.Body.Close()
+
+		if resp.StatusCode == 200 {
+			break
+		}
+
+		if i == 1 {
+			return nil, errors.New("Unexpected status code returned." + resp.Status)
+		}
+
 	}
 
 	bodyBytes, err := ioutil.ReadAll(resp.Body)
+
+	if err != nil {
+		return nil, err
+	}
 
 	return &bodyBytes, nil
 
