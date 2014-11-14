@@ -13,9 +13,14 @@ func (helper TelapiHelper) TelapiRequest(method string, urlStr string, params ma
 
 	data := DataMapToUrlValues(params)
 
-	var resp *http.Response
+	var (
+		resp       *http.Response
+		maxRetries int
+	)
 
-	for i := 0; i < 2; i++ {
+	maxRetries = 1
+
+	for i := 1; i <= maxRetries; i++ {
 		client := &http.Client{}
 		req, err := http.NewRequest(method, urlStr, bytes.NewBufferString(data.Encode()))
 		if err != nil {
@@ -30,7 +35,7 @@ func (helper TelapiHelper) TelapiRequest(method string, urlStr string, params ma
 			break
 		}
 
-		if i == 1 {
+		if maxRetries == i {
 			return nil, errors.New("Unexpected status code returned." + resp.Status)
 		}
 
