@@ -27,6 +27,10 @@ func (helper TelapiHelper) TelapiRequest(method string, urlStr string, params ma
 			return nil, err
 		}
 
+		if helper.Sid == "" || helper.AuthToken == "" {
+			return nil, errors.New("We are missing ether the Sid or authtoken " + helper.Sid + ":" + helper.AuthToken)
+		}
+
 		req.SetBasicAuth(helper.Sid, helper.AuthToken)
 		resp, err = client.Do(req)
 		defer resp.Body.Close()
