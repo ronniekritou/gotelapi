@@ -38,7 +38,10 @@ func TestMakeCall(t *testing.T) {
 		})
 
 		Convey("Should have no errors", func() {
-			call, err = telapi_helper.MakeCall(testing_number_from, testing_number_to, "https://www.telapi.com/data/inboundxml/aebb79a7e8b42bcd8e40a89409714c18016f9537", nil)
+			optional := &CallOptions{
+				HideCallerId: true,
+			}
+			call, err = telapi_helper.MakeCall(testing_number_from, testing_number_to, "https://www.telapi.com/data/inboundxml/aebb79a7e8b42bcd8e40a89409714c18016f9537", optional)
 			So(err, ShouldBeNil)
 			So(call, ShouldNotBeNil)
 		})

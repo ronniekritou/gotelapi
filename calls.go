@@ -32,8 +32,20 @@ type Call struct {
 	CallerIdBlocked bool
 }
 
+type CallOptions struct { //Needs to be added with more values
+	HideCallerId bool
+}
+
+func (callOptions CallOptions) ToMap() map[string]string { //needs to be updated as the struct is updated
+	callOptionsMap := map[string]string{}
+
+	callOptionsMap["HideCallerId"] = fmt.Sprintf("%v", callOptions.HideCallerId)
+
+	return callOptionsMap
+}
+
 //minimal caller, optional map being passed but not implemented
-func (helper TelapiHelper) MakeCall(from, to, url string, optional map[string]interface{}) (*Call, error) {
+func (helper TelapiHelper) MakeCall(from, to, url string, options *CallOptions) (*Call, error) {
 	if from == "" || to == "" || url == "" {
 		return nil, errors.New("Missing needed From, To, or Url")
 	}
@@ -44,8 +56,13 @@ func (helper TelapiHelper) MakeCall(from, to, url string, optional map[string]in
 		"Url":  url,
 	}
 
-	if optional, ok := optional["HideCallerId"].(bool); ok {
-		data["HideCallerId"] = fmt.Sprintf("%v", optional)
+	if options != nil {
+
+		dataMap := options.ToMap()
+
+		for k, v := range dataMap {
+			data[k] = v
+		}
 	}
 
 	resp, err := helper.PostRequest("/Calls", data)
