@@ -3,7 +3,13 @@ package telapi
 import (
 	"encoding/json"
 	"errors"
+
+	// "fmt"
 )
+
+type CallData struct {
+	Call Call
+}
 
 type Call struct {
 	Sid             string
@@ -24,6 +30,33 @@ type Call struct {
 	ForwardedFrom   string
 	Duration        float64
 	CallerIdBlocked bool
+}
+
+//minimal caller, optional map being passed but not implemented
+func (helper TelapiHelper) MakeCall(from, to, url string, optional map[string]string) (*Call, error) {
+	if from == "" || to == "" || url == "" {
+		return nil, errors.New("Missing needed From, To, or Url")
+	}
+
+	data := map[string]string{
+		"To":   to,
+		"From": from,
+		"Url":  url,
+	}
+	resp, err := helper.PostRequest("/Calls", data)
+
+	if err != nil {
+		return nil, err
+	}
+
+	call := new(CallData)
+
+	if err = json.Unmarshal(*resp, &call); err != nil {
+		return nil, err
+	}
+
+	return &call.Call, nil
+
 }
 
 func (helper TelapiHelper) ViewCall(call_sid string) (*Call, error) {

@@ -7,11 +7,44 @@ import (
 )
 
 var (
-	testing_telapi_sid        = "telapi_sid"
-	testing_telapi_auth_token = "your_telapi_auth_token"
-	testing_number_to         = "your_telapi_number"
-	testing_number_from       = "other_testing_number" //Correlates to telapi sid being used
+	testing_telapi_sid        = ""
+	testing_telapi_auth_token = ""
+	testing_number_to         = ""
+	testing_number_from       = "" //Correlates to telapi sid being used
 )
+
+func TestMakeCall(t *testing.T) {
+
+	var (
+		err           error
+		telapi_helper TelapiHelper
+		call          *Call
+	)
+
+	Convey("Tests when MakeCall method has been called", t, func() {
+
+		Convey("Should not have an error, bc correct credentials", func() {
+
+			telapi_helper, err = CreateClient(testing_telapi_sid, testing_telapi_auth_token)
+
+			So(err, ShouldBeNil)
+		})
+
+		Convey("Should blow up because no  sid", func() {
+			call, err = telapi_helper.MakeCall("", "", "", nil)
+
+			So(err, ShouldNotBeNil)
+			So(call, ShouldBeNil)
+		})
+
+		Convey("Should have no errors", func() {
+			call, err = telapi_helper.MakeCall("+17327305402", "+17325807596", "https://www.telapi.com/data/inboundxml/aebb79a7e8b42bcd8e40a89409714c18016f9537", nil)
+			So(err, ShouldBeNil)
+			So(call, ShouldNotBeNil)
+		})
+
+	})
+}
 
 func TestViewCall(t *testing.T) {
 
@@ -32,7 +65,7 @@ func TestViewCall(t *testing.T) {
 			So(err, ShouldBeNil)
 		})
 
-		Convey("Should blow up because no voicemail sid", func() {
+		Convey("Should blow up because no sid", func() {
 			fmt.Println("Convey 3 after")
 
 			call, err = telapi_helper.ViewCall("")
@@ -73,13 +106,15 @@ func TestRecordCall(t *testing.T) {
 			So(err, ShouldNotBeNil)
 		})
 
-		Convey("Should have no errors", func() {
+		Convey("Should have no errors(if active call is going on)", func() {
 			data := map[string]string{
-				"Direction":   "in",
-				"CallBackUrl": "http://webhookr.com/349mXC",
+				"Direction": "in",
 			}
 			err = telapi_helper.RecordCall("CA4d8890840244259058c44052866b64f8", data)
-			So(err, ShouldBeNil)
+			// So(err, ShouldBeNil) // if call sid is valid then it will pass
+			//otherwise expect an error
+			So(err, ShouldNotBeNil)
+
 		})
 
 	})
