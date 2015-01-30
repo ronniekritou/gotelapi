@@ -3,8 +3,8 @@ package telapi
 import (
 	"encoding/json"
 	"errors"
-
-	// "fmt"
+	// "strconv"
+	"fmt"
 )
 
 type CallData struct {
@@ -33,7 +33,7 @@ type Call struct {
 }
 
 //minimal caller, optional map being passed but not implemented
-func (helper TelapiHelper) MakeCall(from, to, url string, optional map[string]string) (*Call, error) {
+func (helper TelapiHelper) MakeCall(from, to, url string, optional map[string]interface{}) (*Call, error) {
 	if from == "" || to == "" || url == "" {
 		return nil, errors.New("Missing needed From, To, or Url")
 	}
@@ -43,6 +43,11 @@ func (helper TelapiHelper) MakeCall(from, to, url string, optional map[string]st
 		"From": from,
 		"Url":  url,
 	}
+
+	if optional, ok := optional["HideCallerId"].(bool); ok {
+		data["HideCallerId"] = fmt.Sprintf("%v", optional)
+	}
+
 	resp, err := helper.PostRequest("/Calls", data)
 
 	if err != nil {
