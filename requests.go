@@ -33,6 +33,10 @@ func (helper TelapiHelper) TelapiRequest(method string, urlStr string, params ma
 
 		req.SetBasicAuth(helper.Sid, helper.AuthToken)
 		resp, err = client.Do(req)
+		if err != nil {
+			return nil, err
+		}
+
 		defer resp.Body.Close()
 
 		if resp.StatusCode == 200 {
