@@ -30,9 +30,11 @@ func TestFindConferenceByFriendlyName(t *testing.T) {
 		})
 
 		Convey("Should have no errors", func() {
-			conference, err = telapi_helper.FindConferenceByFriendlyName("CF4d889084a46cc36f46794904a87a86d8")
+			conference, err = telapi_helper.FindConferenceByFriendlyName("347249516")
 			So(err, ShouldBeNil)
-			So(conference, ShouldNotBeNil)
+			So(conference, ShouldBeNil)
+			// So(conference.FriendlyName, ShouldEqual, "347249516")
+			So(conference.Sid, ShouldEqual, "CF4d8890840765528ab03a476598bc15fa")
 			So(conference.ActiveParticipantsCount, ShouldEqual, 0)
 		})
 

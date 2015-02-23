@@ -83,3 +83,21 @@ func (helper TelapiHelper) GetRequest(uri string, param_data map[string]string) 
 	return resp, nil
 
 }
+
+func (helper TelapiHelper) GetRequestWithParamsAdded(uri string, param_data map[string]string) (*[]byte, error) {
+
+	urlStr := fmt.Sprintf("https://api.telapi.com/v1/Accounts/%s%s.json?", helper.Sid, uri)
+
+	for k, v := range param_data {
+		urlStr = urlStr + fmt.Sprintf("%s=%s", k, v)
+	}
+
+	fmt.Println(urlStr)
+	resp, err := helper.TelapiRequest("GET", urlStr, param_data)
+	if err != nil {
+		return nil, err
+	}
+
+	return resp, nil
+
+}

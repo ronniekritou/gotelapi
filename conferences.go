@@ -7,7 +7,7 @@ import (
 )
 
 type ConferenceData struct {
-	Conference Conference
+	Conferences []Conference
 }
 
 type Conference struct {
@@ -15,7 +15,7 @@ type Conference struct {
 	DataCreated             string
 	DateUpdated             string
 	FriendlyName            string
-	ActiveParticipantsCount int
+	ActiveParticipantsCount int `json:"active_participants_count"`
 	Uri                     string
 	Status                  string
 }
@@ -25,7 +25,12 @@ func (helper TelapiHelper) FindConferenceByFriendlyName(friendlyName string) (*C
 		return nil, errors.New("Missing friendlyName!")
 	}
 
-	resp, err := helper.PostRequest(fmt.Sprintf("/Conferences/%s", friendlyName), nil)
+	fmt.Println(friendlyName)
+	data := map[string]string{
+		"FriendlyName": friendlyName,
+	}
+
+	resp, err := helper.GetRequestWithParamsAdded(fmt.Sprintf("/Conferences"), data)
 
 	if err != nil {
 		return nil, err
@@ -37,6 +42,10 @@ func (helper TelapiHelper) FindConferenceByFriendlyName(friendlyName string) (*C
 		return nil, err
 	}
 
-	return &conference.Conference, nil
+	if len(conference.Conferences) < 1 {
+		return nil, errors.New("Could no locate conference by friendlyname")
+	}
+
+	return &conference.Conferences[0], nil
 
 }

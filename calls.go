@@ -116,3 +116,17 @@ func (helper TelapiHelper) RecordCall(call_sid string, params map[string]string)
 
 	return nil
 }
+
+func (helper TelapiHelper) PlayAudioCall(call_sid string, params map[string]string) error {
+	if call_sid == "" {
+		return errors.New("Missing required call sid.")
+	}
+
+	_, err := helper.PostRequest("/Calls/"+call_sid+"/Play", params)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

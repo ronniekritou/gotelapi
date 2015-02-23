@@ -29,10 +29,11 @@ func TestCarrierLookup(t *testing.T) {
 		})
 
 		Convey("Should have no errors", func() {
-			carrier, err = telapi_helper.CarrierLookup("+13134333244")
+			carrier, err = telapi_helper.CarrierLookup("+17325807596")
 
 			So(err, ShouldBeNil)
 			So(carrier, ShouldNotBeNil)
+			So(carrier.CarrierId, ShouldEqual, 20314)
 		})
 
 	})

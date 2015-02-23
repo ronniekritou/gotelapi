@@ -12,8 +12,8 @@ type CarrierLookup struct {
 	AccountSid  string
 	PhoneNumber string
 	Network     string
-	Mobile      bool `json:",string"`
-	CarrierId   float64
+	Mobile      bool    `json:",string"`
+	CarrierId   float64 `json:"carrier_id"`
 	CountryCode string
 	Mnc         string
 	Mcc         string
