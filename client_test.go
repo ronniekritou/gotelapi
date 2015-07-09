@@ -5,6 +5,15 @@ import (
 	"testing"
 )
 
+var (
+	testTelapiSid       = ""
+	testTelapiAuthToken = ""
+	testNumberTo        = ""
+	testNumberFrom      = "" //Correlates to telapi sid being used
+	testCallSid         = "" //Also correlates to telapi sid being used
+	testRecordingSid    = ""
+)
+
 func TestCreateClient(t *testing.T) {
 
 	Convey("Tests when creating a client", t, func() {
@@ -32,13 +41,13 @@ func TestCreateClient(t *testing.T) {
 		})
 
 		Convey("calling method CreateClient with good credentials", func() {
-			telapi_helper, err := CreateClient(testing_telapi_sid, testing_telapi_auth_token)
+			telapi_helper, err := CreateClient(testTelapiSid, testTelapiAuthToken)
 
 			Convey("Should be no error, due to good credentials", func() {
 				So(err, ShouldBeNil)
 			})
 			Convey("The sid should be correctly set.", func() {
-				So(telapi_helper.Sid, ShouldEqual, testing_telapi_sid)
+				So(telapi_helper.Sid, ShouldEqual, testTelapiSid)
 			})
 		})
 

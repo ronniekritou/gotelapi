@@ -17,7 +17,7 @@ func TestGetAllIncomingNumbers(t *testing.T) {
 
 		Convey("Should not have an error, bc correct credentials", func() {
 
-			telapi_helper, err = CreateClient(testing_telapi_sid, testing_telapi_auth_token)
+			telapi_helper, err = CreateClient(testTelapiSid, testTelapiAuthToken)
 
 			So(err, ShouldBeNil)
 		})

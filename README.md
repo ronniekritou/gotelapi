@@ -5,10 +5,13 @@ In client_test.go, if you would like to run tests just update these variables co
 
 ```sh
 var (
-	testing_telapi_sid        = "telapi_sid"
-	testing_telapi_auth_token = "your_telapi_auth_token"
-	testing_number_to         = "your_telapi_number"
-	testing_number_from       = "other_testing_number" //Correlates to telapi sid being used
+var (
+	testTelapiSid       = "your telapi sid"
+	testTelapiAuthToken = "your telapi auth"
+	testNumberTo        = "Destination number of a text"
+	testNumberFrom      = "Where the text should send from" //Correlates to telapi sid being used
+	testCallSid         = "A random call sid for the call tests" //Also correlates to telapi sid being used
+	testRecordingSid    = "A random recording sid on the account"
 )
 ```
 

@@ -15,7 +15,7 @@ func TestSendSMS(t *testing.T) {
 	Convey("Tests when SendSMS method called ", t, func() {
 
 		Convey("Should not have an error, bc correct credentials", func() {
-			telapi_helper, err = CreateClient(testing_telapi_sid, testing_telapi_auth_token)
+			telapi_helper, err = CreateClient(testTelapiSid, testTelapiAuthToken)
 
 			So(err, ShouldBeNil)
 		})
@@ -39,11 +39,9 @@ func TestSendSMS(t *testing.T) {
 		})
 
 		Convey("Should have no errors", func() {
-			sms, err := telapi_helper.SendSMS(testing_number_to, testing_number_from, `TrapCall New Transcription
-Cell Phone   NJ
-(848) 210-6084
-NEW JERSEY NJ 
-(06/30/14 4:05 PM)
+			sms, err := telapi_helper.SendSMS(testNumberTo, testNumberFrom, `lkndlndkd;kmd;kldm
+flknfdlkdfknfdlknfdlsknflsnkfs
+dsfjlnsfdlfnsdklsflnkfsldk
 I make phone calls because Ronnie talk to you soon.
 http://v.trapcall.com/445jccko
 

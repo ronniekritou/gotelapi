@@ -5,6 +5,10 @@ import (
 	"errors"
 )
 
+type CarrierLookupData struct {
+	CarrierLookups []CarrierLookup `json:"carrier_lookups"`
+}
+
 type CarrierLookup struct {
 	Sid         string
 	DataCreated string
@@ -22,6 +26,10 @@ type CarrierLookup struct {
 	Uri         string
 }
 
+type CnamLookupData struct {
+	CnamLookups []CnamLookup `json:"cnam_lookups"`
+}
+
 type CnamLookup struct {
 	Sid         string
 	DataCreated string
@@ -32,6 +40,10 @@ type CnamLookup struct {
 	Price       string
 	ApiVersion  string
 	Uri         string
+}
+
+type BnaLookupData struct {
+	BnaLookups []BnaLookup `json:"bna_lookups"`
 }
 
 type BnaLookup struct {
@@ -67,30 +79,13 @@ func (helper TelapiHelper) CarrierLookup(phone_number string) (*CarrierLookup, e
 		return nil, err
 	}
 
-	//Lets unmarshal our response
-	var f interface{}
-	err = json.Unmarshal(*resp, &f)
-	if err != nil {
+	carrier := new(CarrierLookupData)
+
+	if err = json.Unmarshal(*resp, &carrier); err != nil {
 		return nil, err
 	}
 
-	//Since it returns us a map with an array as the first element, we have to parse it out
-	data_map := f.(map[string]interface{})
-	response_list := data_map["carrier_lookups"]
-	carrierList := response_list.([]interface{}) //array of interfaces
-	carrier_data, err := json.Marshal(carrierList[0].(map[string]interface{}))
-	// make it back into bytes so we can apply attributes
-
-	if err != nil {
-		return nil, err
-	}
-
-	carrier := new(CarrierLookup)
-
-	if err = json.Unmarshal(carrier_data, &carrier); err != nil {
-		return nil, err
-	}
-	return carrier, nil
+	return &carrier.CarrierLookups[0], nil
 
 }
 
@@ -109,26 +104,14 @@ func (helper TelapiHelper) BnaLookup(phone_number string) (*BnaLookup, error) {
 		return nil, err
 	}
 
-	//Lets unmarshal our response
-	var f interface{}
-	err = json.Unmarshal(*resp, &f)
-	if err != nil {
+	bna := new(BnaLookupData)
+
+	if err = json.Unmarshal(*resp, &bna); err != nil {
 		return nil, err
 	}
 
-	//Since it returns us a map with an array as the first element, we have to parse it out
-	data_map := f.(map[string]interface{})
-	response_list := data_map["bna_lookups"]
-	bnaList := response_list.([]interface{}) //array of interfaces
-	bna_data, err := json.Marshal(bnaList[0].(map[string]interface{}))
-	// make it back into bytes so we can apply attributes
+	return &bna.BnaLookups[0], nil
 
-	bna := new(BnaLookup)
-
-	if err = json.Unmarshal(bna_data, &bna); err != nil {
-		return nil, err
-	}
-	return bna, nil
 }
 
 func (helper TelapiHelper) CnamLookup(phone_number string) (*CnamLookup, error) {
@@ -146,25 +129,12 @@ func (helper TelapiHelper) CnamLookup(phone_number string) (*CnamLookup, error) 
 		return nil, err
 	}
 
-	//Lets unmarshal our response
-	var f interface{}
-	err = json.Unmarshal(*resp, &f)
-	if err != nil {
+	cnam := new(CnamLookupData)
+
+	if err = json.Unmarshal(*resp, &cnam); err != nil {
 		return nil, err
 	}
 
-	//Since it returns us a map with an array as the first element, we have to parse it out
-	data_map := f.(map[string]interface{})
-	response_list := data_map["cnam_lookups"]
-	cnamList := response_list.([]interface{}) //array of interfaces
-	cnam_data, err := json.Marshal(cnamList[0].(map[string]interface{}))
-	// make it back into bytes so we can apply attributes
-
-	cnam := new(CnamLookup)
-
-	if err = json.Unmarshal(cnam_data, &cnam); err != nil {
-		return nil, err
-	}
-	return cnam, nil
+	return &cnam.CnamLookups[0], nil
 
 }

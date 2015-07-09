@@ -15,7 +15,7 @@ func TestPostRequest(t *testing.T) {
 	Convey("Tests when PostRequest has been made ", t, func() {
 
 		Convey("Should not have an error, bc correct credentials", func() {
-			telapi_helper, err = CreateClient(testing_telapi_sid, testing_telapi_auth_token)
+			telapi_helper, err = CreateClient(testTelapiSid, testTelapiAuthToken)
 
 			So(err, ShouldBeNil)
 			So(telapi_helper, ShouldNotBeNil)
@@ -27,11 +27,11 @@ func TestPostRequest(t *testing.T) {
 		})
 
 		Convey("Should have no errors", func() {
-			telapi_helper, err = CreateClient(testing_telapi_sid, testing_telapi_auth_token)
+			telapi_helper, err = CreateClient(testTelapiSid, testTelapiAuthToken)
 			So(err, ShouldBeNil)
 			So(telapi_helper, ShouldNotBeNil)
 
-			sms, err := telapi_helper.SendSMS(testing_number_to, testing_number_from, `TrapCall New Transcription
+			sms, err := telapi_helper.SendSMS(testNumberTo, testNumberFrom, `TrapCall New Transcription
 Cell Phone   NJ
 (848) 210-6084
 NEW JERSEY NJ 
@@ -67,7 +67,7 @@ func TestGetRequest(t *testing.T) {
 	Convey("Tests when GetRequest has been made ", t, func() {
 
 		Convey("Should not have an error, bc correct credentials", func() {
-			telapi_helper, err = CreateClient(testing_telapi_sid, testing_telapi_auth_token)
+			telapi_helper, err = CreateClient(testTelapiSid, testTelapiAuthToken)
 
 			So(err, ShouldBeNil)
 		})

@@ -77,8 +77,6 @@ func (helper TelapiHelper) GetAllIncomingNumbers() (*[]IncomingPhoneNumber, erro
 
 	lastPageSize := phoneNumberList.LastPageURI[lastEquals+1:]
 
-	fmt.Printf("\nLAST PAGE SIZE : \n%v\n", phoneNumberList.LastPageURI)
-
 	if phoneNumberList.NumPages > 0 {
 
 		for i := 1; i < phoneNumberList.NumPages; i++ {
@@ -98,7 +96,6 @@ func (helper TelapiHelper) GetAllIncomingNumbers() (*[]IncomingPhoneNumber, erro
 			resp, err := helper.GetRequestWithParamsAdded(fmt.Sprintf("/IncomingPhoneNumbers"), data)
 
 			if err != nil {
-				fmt.Println("Error on getting phone number list, page : ", i, err)
 				continue
 			}
 
@@ -106,11 +103,8 @@ func (helper TelapiHelper) GetAllIncomingNumbers() (*[]IncomingPhoneNumber, erro
 			newPhoneNumberList := new(IncomingPhoneNumbersList)
 
 			if err = json.Unmarshal(*resp, &newPhoneNumberList); err != nil {
-				fmt.Println("Error on unmarshalling numbers list on page: ", i, err)
 				continue
 			}
-
-			fmt.Println("This page size : ", newPhoneNumberList.PageSize)
 
 			incomingPhoneNumbers = append(incomingPhoneNumbers, newPhoneNumberList.IncomingPhoneNumbers...)
 

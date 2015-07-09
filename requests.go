@@ -48,8 +48,9 @@ func (helper TelapiHelper) TelapiRequest(method string, urlStr string, params ma
 		}
 
 		if maxRetries == i {
+
 			// fmt.Println(resp)
-			return nil, errors.New("Unexpected status code returned." + resp.Status)
+			return nil, errors.New(fmt.Sprintf("Unexpected status code returned : %d \nError was : %s", resp.StatusCode, resp.Status))
 		}
 
 		// fmt.Println(resp.Status)

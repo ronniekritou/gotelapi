@@ -3,7 +3,6 @@ package telapi
 import (
 	"encoding/json"
 	"errors"
-	// "strconv"
 	"fmt"
 )
 
@@ -101,6 +100,8 @@ func (helper TelapiHelper) ViewCall(call_sid string) (*Call, error) {
 
 }
 
+//Actions that may be done , on on-going calls.
+
 func (helper TelapiHelper) RecordCall(call_sid string, params map[string]string) error {
 	if call_sid == "" {
 		return errors.New("Missing required call sid.")
@@ -127,6 +128,24 @@ func (helper TelapiHelper) PlayAudioCall(call_sid string, params map[string]stri
 	if err != nil {
 		return err
 	}
+
+	return nil
+}
+
+func (helper TelapiHelper) InterruptCall(call_sid string, params map[string]string) error {
+	if call_sid == "" {
+		return errors.New("Missing required call sid.")
+	}
+
+	fmt.Println("HERE ?")
+
+	_, err := helper.PostRequestv2("/Calls/"+call_sid, params)
+
+	if err != nil {
+		return err
+	}
+
+	fmt.Println("HERE2 ?", err)
 
 	return nil
 }

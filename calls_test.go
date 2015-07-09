@@ -6,13 +6,6 @@ import (
 	"testing"
 )
 
-var (
-	testing_telapi_sid        = ""
-	testing_telapi_auth_token = ""
-	testing_number_to         = ""
-	testing_number_from       = "" //Correlates to telapi sid being used
-)
-
 func TestMakeCall(t *testing.T) {
 
 	var (
@@ -25,7 +18,7 @@ func TestMakeCall(t *testing.T) {
 
 		Convey("Should not have an error, bc correct credentials", func() {
 
-			telapi_helper, err = CreateClient(testing_telapi_sid, testing_telapi_auth_token)
+			telapi_helper, err = CreateClient(testTelapiSid, testTelapiAuthToken)
 
 			So(err, ShouldBeNil)
 		})
@@ -41,7 +34,7 @@ func TestMakeCall(t *testing.T) {
 			optional := &CallOptions{
 				HideCallerId: true,
 			}
-			call, err = telapi_helper.MakeCall(testing_number_from, testing_number_to, "https://www.telapi.com/data/inboundxml/aebb79a7e8b42bcd8e40a89409714c18016f9537", optional)
+			call, err = telapi_helper.MakeCall(testNumberFrom, testNumberTo, "https://www.telapi.com/data/inboundxml/aebb79a7e8b42bcd8e40a89409714c18016f9537", optional)
 			So(err, ShouldBeNil)
 			So(call, ShouldNotBeNil)
 		})
@@ -63,7 +56,7 @@ func TestViewCall(t *testing.T) {
 		Convey("Should not have an error, bc correct credentials", func() {
 			fmt.Println("Convey 2 after")
 
-			telapi_helper, err = CreateClient(testing_telapi_sid, testing_telapi_auth_token)
+			telapi_helper, err = CreateClient(testTelapiSid, testTelapiAuthToken)
 
 			So(err, ShouldBeNil)
 		})
@@ -78,7 +71,7 @@ func TestViewCall(t *testing.T) {
 		})
 
 		Convey("Should have no errors", func() {
-			call, err = telapi_helper.ViewCall("CA6c88908491f4a2a7b2cd41478a408584")
+			call, err = telapi_helper.ViewCall(testCallSid)
 			So(err, ShouldBeNil)
 			So(call, ShouldNotBeNil)
 		})
@@ -97,7 +90,7 @@ func TestRecordCall(t *testing.T) {
 
 		Convey("Should not have an error, bc correct credentials", func() {
 
-			telapi_helper, err = CreateClient(testing_telapi_sid, testing_telapi_auth_token)
+			telapi_helper, err = CreateClient(testTelapiSid, testTelapiAuthToken)
 
 			So(err, ShouldBeNil)
 		})
@@ -113,10 +106,10 @@ func TestRecordCall(t *testing.T) {
 			data := map[string]string{
 				"Direction": "in",
 			}
-			err = telapi_helper.RecordCall("CA4d8890840244259058c44052866b64f8", data)
+			err = telapi_helper.RecordCall(testCallSid, data)
 			// So(err, ShouldBeNil) // if call sid is valid then it will pass
 			//otherwise expect an error
-			So(err, ShouldNotBeNil)
+			So(err, ShouldBeNil)
 
 		})
 
