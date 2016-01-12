@@ -27,8 +27,8 @@ func TestGetAllIncomingNumbers(t *testing.T) {
 
 			So(err, ShouldBeNil)
 			So(numbers, ShouldNotBeNil)
-			So(len(numbers), ShouldBeLessThanOrEqualTo, 375)
-
+			So(len(numbers), ShouldBeLessThanOrEqualTo, 380)
+			So(len(numbers), ShouldBeGreaterThan, 300)
 		})
 
 	})

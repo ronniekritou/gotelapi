@@ -7,18 +7,18 @@ import (
 )
 
 type IncomingPhoneNumbersList struct {
-	FirstPageURI         string                `json:"first_page_uri"`
-	End                  int                   `json:"end"`
-	Total                int                   `json:"total"`
-	PreviousPageURI      string                `json:"previous_page_uri"`
-	NumPages             int                   `json:"num_pages"`
-	IncomingPhoneNumbers []IncomingPhoneNumber `json:"incoming_phone_numbers"`
-	URI                  string                `json:"uri"`
-	PageSize             int                   `json:"page_size"`
-	Start                int                   `json:"start"`
-	NextPageURI          string                `json:"next_page_uri"`
-	LastPageURI          string                `json:"last_page_uri"`
-	Page                 int                   `json:"page"`
+	FirstPageURI         string                 `json:"first_page_uri"`
+	End                  int                    `json:"end"`
+	Total                int                    `json:"total"`
+	PreviousPageURI      string                 `json:"previous_page_uri"`
+	NumPages             int                    `json:"num_pages"`
+	IncomingPhoneNumbers []*IncomingPhoneNumber `json:"incoming_phone_numbers"`
+	URI                  string                 `json:"uri"`
+	PageSize             int                    `json:"page_size"`
+	Start                int                    `json:"start"`
+	NextPageURI          string                 `json:"next_page_uri"`
+	LastPageURI          string                 `json:"last_page_uri"`
+	Page                 int                    `json:"page"`
 }
 
 type IncomingPhoneNumber struct {
@@ -53,18 +53,16 @@ type IncomingPhoneNumber struct {
 	StatusCallback       interface{} `json:"status_callback"`
 }
 
-func (helper TelapiHelper) GetAllIncomingNumbers() ([]IncomingPhoneNumber, error) {
-
+func (helper TelapiHelper) GetAllIncomingNumbers() ([]*IncomingPhoneNumber, error) {
 	resp, err := helper.GetRequest(fmt.Sprintf("/IncomingPhoneNumbers"), nil)
-
 	if err != nil {
 		return nil, err
 	}
 
-	incomingPhoneNumbers := []IncomingPhoneNumber{}
+	incomingPhoneNumbers := []*IncomingPhoneNumber{}
 
 	// Original list of phone numbers we are going to use the data from this one to populate the actual list
-	phoneNumberList := new(IncomingPhoneNumbersList)
+	phoneNumberList := &IncomingPhoneNumbersList{}
 
 	if err = json.Unmarshal(*resp, &phoneNumberList); err != nil {
 		return nil, err
@@ -74,13 +72,10 @@ func (helper TelapiHelper) GetAllIncomingNumbers() ([]IncomingPhoneNumber, error
 	incomingPhoneNumbers = append(incomingPhoneNumbers, phoneNumberList.IncomingPhoneNumbers...)
 
 	lastEquals := strings.LastIndex(phoneNumberList.LastPageURI, "=")
-
 	lastPageSize := phoneNumberList.LastPageURI[lastEquals+1:]
 
 	if phoneNumberList.NumPages > 0 {
-
 		for i := 1; i < phoneNumberList.NumPages; i++ {
-
 			data := map[string]string{
 				"Page":     fmt.Sprintf("%d", i),
 				"PageSize": fmt.Sprintf("%d", phoneNumberList.PageSize),
@@ -89,19 +84,16 @@ func (helper TelapiHelper) GetAllIncomingNumbers() ([]IncomingPhoneNumber, error
 			if i == phoneNumberList.NumPages-1 {
 				fmt.Println("Using last page size", lastPageSize)
 				data["pageSize"] = fmt.Sprintf("%s", lastPageSize)
-
 			}
 
 			// get the correct page number next if there is one
 			resp, err := helper.GetRequestWithParamsAdded(fmt.Sprintf("/IncomingPhoneNumbers"), data)
-
 			if err != nil {
 				continue
 			}
 
 			// make it into a struct
-			newPhoneNumberList := new(IncomingPhoneNumbersList)
-
+			newPhoneNumberList := &IncomingPhoneNumbersList{}
 			if err = json.Unmarshal(*resp, &newPhoneNumberList); err != nil {
 				continue
 			}
