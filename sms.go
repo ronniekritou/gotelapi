@@ -23,15 +23,18 @@ type SmsMessage struct {
 
 func (helper TelapiHelper) SendSMS(to string, from string, body string) (*SmsMessage, error) {
 
-	if to == "" || from == "" {
-		return nil, errors.New("Missing required To or From.")
+	if to == "" {
+		return nil, errors.New("Missing required To.")
 	}
 
 	data := map[string]string{
 		"To":            to,
-		"From":          from,
 		"Body":          body,
 		"AllowMultiple": "true",
+	}
+
+	if from != "" {
+		data["From"] = from
 	}
 
 	resp, err := helper.PostRequest("/SMS/Messages", data)
