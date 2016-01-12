@@ -63,7 +63,6 @@ func (helper TelapiHelper) GetAllIncomingNumbers() ([]*IncomingPhoneNumber, erro
 
 	// Original list of phone numbers we are going to use the data from this one to populate the actual list
 	phoneNumberList := &IncomingPhoneNumbersList{}
-
 	if err = json.Unmarshal(*resp, &phoneNumberList); err != nil {
 		return nil, err
 	}
@@ -99,11 +98,7 @@ func (helper TelapiHelper) GetAllIncomingNumbers() ([]*IncomingPhoneNumber, erro
 			}
 
 			incomingPhoneNumbers = append(incomingPhoneNumbers, newPhoneNumberList.IncomingPhoneNumbers...)
-
 		}
-
 	}
-
 	return incomingPhoneNumbers, nil
-
 }
