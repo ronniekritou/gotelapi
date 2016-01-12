@@ -53,7 +53,7 @@ type IncomingPhoneNumber struct {
 	StatusCallback       interface{} `json:"status_callback"`
 }
 
-func (helper TelapiHelper) GetAllIncomingNumbers() (*[]IncomingPhoneNumber, error) {
+func (helper TelapiHelper) GetAllIncomingNumbers() ([]IncomingPhoneNumber, error) {
 
 	resp, err := helper.GetRequest(fmt.Sprintf("/IncomingPhoneNumbers"), nil)
 
@@ -112,6 +112,6 @@ func (helper TelapiHelper) GetAllIncomingNumbers() (*[]IncomingPhoneNumber, erro
 
 	}
 
-	return &incomingPhoneNumbers, nil
+	return incomingPhoneNumbers, nil
 
 }
