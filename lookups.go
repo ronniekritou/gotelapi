@@ -11,14 +11,14 @@ type CarrierLookupData struct {
 
 type CarrierLookup struct {
 	Sid         string
-	DataCreated string
-	DateUpdated string
-	AccountSid  string
-	PhoneNumber string
+	DataCreated string `json:"date_created"`
+	DateUpdated string `json:"date_updated"`
+	AccountSid  string `json:"account_sid"`
+	PhoneNumber string `json:"phone_number"`
 	Network     string
 	Mobile      bool    `json:",string"`
 	CarrierId   float64 `json:"carrier_id"`
-	CountryCode string
+	CountryCode string  `json:"country_code"`
 	Mnc         string
 	Mcc         int
 	Price       string
@@ -32,10 +32,10 @@ type CnamLookupData struct {
 
 type CnamLookup struct {
 	Sid         string
-	DataCreated string
-	DateUpdated string
-	AccountSid  string
-	PhoneNumber string
+	DataCreated string `json:"date_created"`
+	DateUpdated string `json:"date_updated"`
+	AccountSid  string `json:"account_sid"`
+	PhoneNumber string `json:"phone_number"`
 	Body        string
 	Price       string
 	ApiVersion  string
@@ -48,12 +48,12 @@ type BnaLookupData struct {
 
 type BnaLookup struct {
 	Sid         string
-	DataCreated string
-	DateUpdated string
-	AccountSid  string
-	PhoneNumber string
-	FirstName   string
-	LastName    string
+	DataCreated string `json:"date_created"`
+	DateUpdated string `json:"date_updated"`
+	AccountSid  string `json:"account_sid"`
+	PhoneNumber string `json:"phone_number"`
+	FirstName   string `json:"first_name"`
+	LastName    string `json:"last_name"`
 	Address     string
 	City        string
 	State       string
