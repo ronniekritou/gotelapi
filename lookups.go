@@ -57,7 +57,7 @@ type BnaLookup struct {
 	Address     string
 	City        string
 	State       string
-	ZipCode     string
+	ZipCode     string `json:"zip_code"`
 	CountryCode string
 	Price       string
 	ApiVersion  string
