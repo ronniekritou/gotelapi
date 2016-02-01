@@ -70,13 +70,13 @@ func (helper TelapiHelper) MakeCall(from, to, url string, options *CallOptions) 
 		return nil, err
 	}
 
-	call := new(CallData)
+	call := new(Call)
 
 	if err = json.Unmarshal(*resp, &call); err != nil {
 		return nil, err
 	}
 
-	return &call.Call, nil
+	return call, nil
 
 }
 
