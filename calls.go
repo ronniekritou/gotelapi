@@ -32,13 +32,17 @@ type Call struct {
 }
 
 type CallOptions struct { //Needs to be added with more values
-	HideCallerId bool
+	HideCallerId   bool
+	Record         bool
+	RecordCallback string
 }
 
 func (callOptions CallOptions) ToMap() map[string]string { //needs to be updated as the struct is updated
 	callOptionsMap := map[string]string{}
 
 	callOptionsMap["HideCallerId"] = fmt.Sprintf("%v", callOptions.HideCallerId)
+	callOptionsMap["Record"] = fmt.Sprintf("%v", callOptions.Record)
+	callOptionsMap["RecordCallback"] = callOptions.RecordCallback
 
 	return callOptionsMap
 }
