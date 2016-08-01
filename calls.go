@@ -35,6 +35,7 @@ type CallOptions struct { //Needs to be added with more values
 	HideCallerId   bool
 	Record         bool
 	RecordCallback string
+	RecordFormat   string
 	ForwardedFrom  string
 	Timeout        int
 }
@@ -45,6 +46,7 @@ func (callOptions CallOptions) ToMap() map[string]string { //needs to be updated
 	callOptionsMap["HideCallerId"] = fmt.Sprintf("%v", callOptions.HideCallerId)
 	callOptionsMap["Record"] = fmt.Sprintf("%v", callOptions.Record)
 	callOptionsMap["RecordCallback"] = callOptions.RecordCallback
+	callOptionsMap["RecordFormat"] = callOptions.RecordFormat
 	callOptionsMap["ForwardedFrom"] = callOptions.ForwardedFrom
 	callOptionsMap["Timeout"] = fmt.Sprintf("%d", callOptions.Timeout)
 
