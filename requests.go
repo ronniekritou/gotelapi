@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"time"
 	// "net/url"
 )
 
@@ -23,7 +24,9 @@ func (helper TelapiHelper) TelapiRequest(method string, urlStr string, params ma
 	// fmt.Println("Url posting to is : ", urlStr)
 
 	for i := 1; i <= maxRetries; i++ {
-		client := &http.Client{}
+		client := &http.Client{
+			Timeout: 60 * time.Second,
+		}
 		req, err := http.NewRequest(method, urlStr, bytes.NewBufferString(data.Encode()))
 		if err != nil {
 			return nil, err
