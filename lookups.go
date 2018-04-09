@@ -20,7 +20,7 @@ type CarrierLookup struct {
 	CarrierId   float64 `json:"carrier_id"`
 	CountryCode string  `json:"country_code"`
 	Mnc         string
-	Mcc         int
+	Mcc         string
 	Price       string
 	ApiVersion  string
 	Uri         string
