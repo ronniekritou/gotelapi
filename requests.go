@@ -6,54 +6,36 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	// "net/url"
 )
 
 func (helper TelapiHelper) TelapiRequest(method string, urlStr string, params map[string]string) (*[]byte, error) {
-
 	data := DataMapToUrlValues(params)
 
-	var (
-		resp       *http.Response
-		maxRetries int
-	)
-
-	maxRetries = 1
+	if helper.Sid == "" || helper.AuthToken == "" {
+		return nil, errors.New("we are missing ether the Sid or authtoken " + helper.Sid + ":" + helper.AuthToken)
+	}
 
 	if helper.client == nil {
 		helper.client = http.DefaultClient
 	}
 
-	// fmt.Println("Url posting to is : ", urlStr)
+	req, err := http.NewRequest(method, urlStr, bytes.NewBufferString(data.Encode()))
+	if err != nil {
+		return nil, err
+	}
 
-	for i := 1; i <= maxRetries; i++ {
-		req, err := http.NewRequest(method, urlStr, bytes.NewBufferString(data.Encode()))
-		if err != nil {
-			return nil, err
-		}
+	req.SetBasicAuth(helper.Sid, helper.AuthToken)
+	resp, err := helper.client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
 
-		if helper.Sid == "" || helper.AuthToken == "" {
-			return nil, errors.New("we are missing ether the Sid or authtoken " + helper.Sid + ":" + helper.AuthToken)
-		}
-
-		req.SetBasicAuth(helper.Sid, helper.AuthToken)
-		resp, err = helper.client.Do(req)
-		if err != nil {
-			return nil, err
-		}
-		defer resp.Body.Close()
-
-		if resp.StatusCode == 200 {
-			break
-		}
-
-		if maxRetries == i {
-			return nil, errors.New(fmt.Sprintf("unexpected status code returned : %d \nError was : %s", resp.StatusCode, resp.Status))
-		}
+	if resp.StatusCode != 200 {
+		return nil, errors.New(fmt.Sprintf("unexpected status code returned: %d \nError was: %s", resp.StatusCode, resp.Status))
 	}
 
 	bodyBytes, err := ioutil.ReadAll(resp.Body)
-
 	if err != nil {
 		return nil, err
 	}
