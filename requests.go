@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"time"
 	// "net/url"
 )
 
@@ -21,43 +20,36 @@ func (helper TelapiHelper) TelapiRequest(method string, urlStr string, params ma
 
 	maxRetries = 1
 
+	if helper.client == nil {
+		helper.client = http.DefaultClient
+	}
+
 	// fmt.Println("Url posting to is : ", urlStr)
 
 	for i := 1; i <= maxRetries; i++ {
-		client := &http.Client{
-			Timeout: 60 * time.Second,
-		}
 		req, err := http.NewRequest(method, urlStr, bytes.NewBufferString(data.Encode()))
 		if err != nil {
 			return nil, err
 		}
 
 		if helper.Sid == "" || helper.AuthToken == "" {
-			return nil, errors.New("We are missing ether the Sid or authtoken " + helper.Sid + ":" + helper.AuthToken)
+			return nil, errors.New("we are missing ether the Sid or authtoken " + helper.Sid + ":" + helper.AuthToken)
 		}
 
 		req.SetBasicAuth(helper.Sid, helper.AuthToken)
-		resp, err = client.Do(req)
+		resp, err = helper.client.Do(req)
 		if err != nil {
 			return nil, err
 		}
-
 		defer resp.Body.Close()
-
-		// fmt.Println(resp.Status)
 
 		if resp.StatusCode == 200 {
 			break
 		}
 
 		if maxRetries == i {
-
-			// fmt.Println(resp)
-			return nil, errors.New(fmt.Sprintf("Unexpected status code returned : %d \nError was : %s", resp.StatusCode, resp.Status))
+			return nil, errors.New(fmt.Sprintf("unexpected status code returned : %d \nError was : %s", resp.StatusCode, resp.Status))
 		}
-
-		// fmt.Println(resp.Status)
-
 	}
 
 	bodyBytes, err := ioutil.ReadAll(resp.Body)
@@ -67,7 +59,6 @@ func (helper TelapiHelper) TelapiRequest(method string, urlStr string, params ma
 	}
 
 	return &bodyBytes, nil
-
 }
 
 func (helper TelapiHelper) PostRequest(uri string, param_data map[string]string) (*[]byte, error) {
